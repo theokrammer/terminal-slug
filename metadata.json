@@ -1,0 +1,6 @@
+{
+  "name": "Terminal Slug - ASCII Run & Gun",
+  "description": "High-octane ASCII terminal side-scroller inspired by Metal Slug featuring procedural waves, mountable SV-001 tank, POW rescues, and massive mechanical bosses.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

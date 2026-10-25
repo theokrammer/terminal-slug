@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'VT323', 'Fira Code', monospace;
+    background-color: #030706;
+    color: #4ade80;
+  }
+}
+
+/* CRT and Terminal Effects */
+.crt-scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.4) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 3px, 6px 100%;
+  pointer-events: none;
+}
+
+.crt-vignette {
+  background: radial-gradient(circle at center, transparent 60%, rgba(0, 0, 0, 0.85) 100%);
+  pointer-events: none;
+}
+
+.crt-flicker {
+  animation: crtFlicker 0.15s infinite;
+}
+
+@keyframes crtFlicker {
+  0% { opacity: 0.985; }
+  50% { opacity: 1; }
+  100% { opacity: 0.99; }
+}
+
+.glow-green {
+  text-shadow: 0 0 5px rgba(74, 222, 128, 0.7), 0 0 12px rgba(74, 222, 128, 0.4);
+}
+
+.glow-amber {
+  text-shadow: 0 0 5px rgba(251, 191, 36, 0.7), 0 0 12px rgba(251, 191, 36, 0.4);
+}
+
+.glow-cyan {
+  text-shadow: 0 0 5px rgba(34, 211, 238, 0.7), 0 0 12px rgba(34, 211, 238, 0.4);
+}
+
+.glow-red {
+  text-shadow: 0 0 5px rgba(248, 113, 113, 0.7), 0 0 12px rgba(248, 113, 113, 0.4);
+}
