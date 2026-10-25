@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { X, Crosshair, Shield, Award, Terminal, Skull } from 'lucide-react';
+import { X, Crosshair, Shield, Award, Terminal, Skull, Layers, Flame } from 'lucide-react';
 import { PhosphorTheme } from '../game/types';
 import { THEMES } from '../game/engine';
 
@@ -27,7 +27,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, theme }) 
           <div className="flex items-center space-x-2">
             <Terminal className="w-5 h-5 text-emerald-400" />
             <span className="font-bold tracking-wider text-sm">
-              FIELD DOSSIER: OPERATION DESERT STRIKE [CLASSIFIED]
+              FIELD DOSSIER: MULTI-SECTOR THEATER OF WAR [EXPANDED]
             </span>
           </div>
           <button
@@ -40,22 +40,34 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, theme }) 
 
         {/* Modal Scrollable Body */}
         <div className="p-5 overflow-y-auto space-y-6 text-xs leading-relaxed">
-          {/* Mission Objective */}
+          {/* Mission Objective & Biomes */}
           <section className="bg-zinc-900/60 p-3 rounded border border-emerald-500/20">
             <h3 className="font-bold text-sm text-emerald-300 flex items-center gap-1.5 mb-1.5">
-              <Crosshair className="w-4 h-4 text-emerald-400" /> MISSION BRIEFING
+              <Layers className="w-4 h-4 text-emerald-400" /> MULTI-BIOME CAMPAIGN
             </h3>
-            <p className="text-zinc-300">
-              Infiltrate hostile rebel territory, neutralize procedural waves of insurgent forces,
-              liberate captured P.O.W.s for special ammunition crates, and commandeer the SV-001
-              Metal Slug Super Vehicle to obliterate the Iron Nokana Siege Fortress!
+            <p className="text-zinc-300 mb-2">
+              Advance through three distinct procedural war theaters with evolving terrain, multi-tier platforms, and enemy squads:
             </p>
+            <div className="grid grid-cols-3 gap-2 text-[11px]">
+              <div className="bg-black/50 p-2 rounded border border-zinc-800 text-amber-300">
+                <span className="font-bold">SECTOR 1: DESERT</span>
+                <p className="text-zinc-400">Pyramid outposts, sandbag bunkers, palm groves & Iron Nokana fortress.</p>
+              </div>
+              <div className="bg-black/50 p-2 rounded border border-zinc-800 text-cyan-300">
+                <span className="font-bold">SECTOR 2: CITY</span>
+                <p className="text-zinc-400">Midnight skyscrapers, elevated catwalks, air raids & backup Metal Slug tank.</p>
+              </div>
+              <div className="bg-black/50 p-2 rounded border border-zinc-800 text-red-300">
+                <span className="font-bold">SECTOR 3: CYBER</span>
+                <p className="text-zinc-400">Toxic acid trenches, high-voltage coils & the Tetsuyuki Flying Fortress.</p>
+              </div>
+            </div>
           </section>
 
           {/* Controls */}
           <section className="bg-zinc-900/60 p-3 rounded border border-emerald-500/20">
             <h3 className="font-bold text-sm text-emerald-300 flex items-center gap-1.5 mb-2">
-              <Terminal className="w-4 h-4 text-emerald-400" /> KEYBOARD & TOUCH CONTROLS
+              <Terminal className="w-4 h-4 text-emerald-400" /> ADVANCED COMBAT CONTROLS
             </h3>
             <div className="grid grid-cols-2 gap-2 text-zinc-300">
               <div className="bg-black/50 p-2 rounded border border-zinc-800">
@@ -63,77 +75,93 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, theme }) 
                 <p className="text-[11px] text-zinc-400">Move, Aim Upwards (^), or Crouch Down (duck under bullets)</p>
               </div>
               <div className="bg-black/50 p-2 rounded border border-zinc-800">
+                <span className="text-emerald-400 font-bold">S + Space / Down + Jump:</span>
+                <p className="text-[11px] text-zinc-400">Drop down through catwalks & one-way platforms</p>
+              </div>
+              <div className="bg-black/50 p-2 rounded border border-zinc-800">
                 <span className="text-emerald-400 font-bold">J / F / Left Click:</span>
-                <p className="text-[11px] text-zinc-400">Shoot Weapon (or Knife Melee when in close contact!)</p>
+                <p className="text-[11px] text-zinc-400">Shoot Weapon (or automatic knife melee when in close contact!)</p>
               </div>
               <div className="bg-black/50 p-2 rounded border border-zinc-800">
                 <span className="text-emerald-400 font-bold">K / Space:</span>
-                <p className="text-[11px] text-zinc-400">Jump (Coyote time & jump buffering enabled)</p>
+                <p className="text-[11px] text-zinc-400">Jump onto elevated platforms, watchtowers & bridges</p>
               </div>
               <div className="bg-black/50 p-2 rounded border border-zinc-800">
                 <span className="text-emerald-400 font-bold">L / G:</span>
-                <p className="text-[11px] text-zinc-400">Throw Bouncing Fragmentation Grenade (Heavy Splash Damage)</p>
+                <p className="text-[11px] text-zinc-400">Throw Bouncing Grenades (demolishes watchtowers & barrel piles)</p>
               </div>
-              <div className="bg-black/50 p-2 rounded border border-zinc-800 col-span-2">
+              <div className="bg-black/50 p-2 rounded border border-zinc-800">
                 <span className="text-cyan-400 font-bold">E:</span>
-                <p className="text-[11px] text-zinc-400">Enter / Exit the SV-001 "Metal Slug" Tank when parked nearby</p>
+                <p className="text-[11px] text-zinc-400">Enter / Eject from SV-001 "Metal Slug" Tank</p>
               </div>
             </div>
-          </section>
-
-          {/* Special Weapon Systems */}
-          <section className="bg-zinc-900/60 p-3 rounded border border-emerald-500/20">
-            <h3 className="font-bold text-sm text-amber-300 flex items-center gap-1.5 mb-2">
-              <Award className="w-4 h-4 text-amber-400" /> SPECIAL WEAPON ARSENAL
-            </h3>
-            <div className="space-y-1.5 text-zinc-300">
-              <div className="flex justify-between items-center bg-black/40 px-2 py-1 rounded">
-                <span className="font-bold text-cyan-300">[ H ] HEAVY MACHINE GUN</span>
-                <span className="text-zinc-400">200 rounds rapid staccato suppression</span>
-              </div>
-              <div className="flex justify-between items-center bg-black/40 px-2 py-1 rounded">
-                <span className="font-bold text-amber-300">[ S ] SHOTGUN</span>
-                <span className="text-zinc-400">Wide destructive buckshot blast (destroys bullets)</span>
-              </div>
-              <div className="flex justify-between items-center bg-black/40 px-2 py-1 rounded">
-                <span className="font-bold text-red-300">[ R ] ROCKET LAUNCHER</span>
-                <span className="text-zinc-400">Armor-piercing high velocity explosive rocket</span>
-              </div>
-              <div className="flex justify-between items-center bg-black/40 px-2 py-1 rounded">
-                <span className="font-bold text-orange-300">[ F ] FLAME SHOT</span>
-                <span className="text-zinc-400">Rolling incinerator burning multiple targets</span>
-              </div>
-              <div className="flex justify-between items-center bg-black/40 px-2 py-1 rounded">
-                <span className="font-bold text-sky-300">[ L ] LASER GUN</span>
-                <span className="text-zinc-400">Continuous piercing energy beam</span>
-              </div>
-            </div>
-          </section>
-
-          {/* SV-001 Metal Slug Specs */}
-          <section className="bg-zinc-900/60 p-3 rounded border border-cyan-500/20">
-            <h3 className="font-bold text-sm text-cyan-300 flex items-center gap-1.5 mb-1.5">
-              <Shield className="w-4 h-4 text-cyan-400" /> SV-001 "METAL SLUG" SPECIFICATIONS
-            </h3>
-            <p className="text-zinc-300 mb-2">
-              When piloting the Metal Slug, player health is protected by 100% heavy armor plates.
-            </p>
-            <ul className="list-disc list-inside space-y-1 text-zinc-400 text-[11px]">
-              <li><strong className="text-cyan-300">Twin Vulcan Cannons:</strong> Infinite high-velocity explosive rounds with 360-degree elevation.</li>
-              <li><strong className="text-cyan-300">Armor-Piercing Heavy Cannon:</strong> Press Grenade key (L) for high-yield tank shells.</li>
-              <li><strong className="text-cyan-300">Jump Hydraulics:</strong> Can leap across enemy fortifications and barricades.</li>
-              <li><strong className="text-cyan-300">Emergency Eject:</strong> Press E anytime to abandon the vehicle before structural breach.</li>
-            </ul>
           </section>
 
           {/* Enemy Dossier */}
           <section className="bg-zinc-900/60 p-3 rounded border border-red-500/20">
-            <h3 className="font-bold text-sm text-red-400 flex items-center gap-1.5 mb-1.5">
-              <Skull className="w-4 h-4 text-red-400" /> HOSTILE THREAT ANALYSIS
+            <h3 className="font-bold text-sm text-red-400 flex items-center gap-1.5 mb-2">
+              <Skull className="w-4 h-4 text-red-400" /> EXPANDED ENEMY THREAT DOSSIER
+            </h3>
+            <div className="grid grid-cols-2 gap-2 text-zinc-300 text-[11px]">
+              <div className="bg-black/40 p-2 rounded border border-zinc-800">
+                <span className="text-amber-400 font-bold">Arabian Swordsmen:</span>
+                <p className="text-zinc-400">Acrobatically leaps 60px into the air with twin scimitars.</p>
+              </div>
+              <div className="bg-black/40 p-2 rounded border border-zinc-800">
+                <span className="text-red-400 font-bold">Tower Snipers:</span>
+                <p className="text-zinc-400">Perched on catwalks with glowing red laser sight telegraphs.</p>
+              </div>
+              <div className="bg-black/40 p-2 rounded border border-zinc-800">
+                <span className="text-yellow-400 font-bold">Mortar Artillery:</span>
+                <p className="text-zinc-400">Crouches behind barriers lobbing high-arc cluster shells.</p>
+              </div>
+              <div className="bg-black/40 p-2 rounded border border-zinc-800">
+                <span className="text-orange-400 font-bold">Gatling Juggernaut:</span>
+                <p className="text-zinc-400">Heavy armor commando with minigun spin-up telegraph.</p>
+              </div>
+              <div className="bg-black/40 p-2 rounded border border-zinc-800">
+                <span className="text-sky-400 font-bold">Paratrooper Ambush:</span>
+                <p className="text-zinc-400">Drops from the sky via parachutes behind or above you.</p>
+              </div>
+              <div className="bg-black/40 p-2 rounded border border-zinc-800">
+                <span className="text-purple-400 font-bold">Air Raid Jets:</span>
+                <p className="text-zinc-400">Supersonic flybys dropping carpet bombing strings.</p>
+              </div>
+              <div className="bg-black/40 p-2 rounded border border-zinc-800">
+                <span className="text-red-500 font-bold">Rolling Drone Mines:</span>
+                <p className="text-zinc-400">Fast wheeled kamikaze spike-bots charging to detonate.</p>
+              </div>
+              <div className="bg-black/40 p-2 rounded border border-zinc-800">
+                <span className="text-emerald-400 font-bold">Platform Turrets:</span>
+                <p className="text-zinc-400">360-degree security cannons mounted on high catwalks.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Bosses */}
+          <section className="bg-zinc-900/60 p-3 rounded border border-red-500/20">
+            <h3 className="font-bold text-sm text-red-400 flex items-center gap-1.5 mb-2">
+              <Skull className="w-4 h-4 text-red-500" /> TITAN CLASS BOSS ENCOUNTERS
+            </h3>
+            <div className="space-y-2 text-[11px] text-zinc-300">
+              <div className="bg-black/40 p-2 rounded border border-zinc-800">
+                <strong className="text-red-400">STAGE 1 BOSS: IRON NOKANA (900m)</strong>
+                <p className="text-zinc-400">Heavy siege fortress tank with dual vulcan turrets, mortar batteries, and ground flame sweep.</p>
+              </div>
+              <div className="bg-black/40 p-2 rounded border border-zinc-800">
+                <strong className="text-rose-400">STAGE 2 BOSS: TETSUYUKI FLYING FORTRESS (1800m)</strong>
+                <p className="text-zinc-400">Colossal aerial gunship equipped with twin turbines, heavy flak cannons, and paratrooper drop bays.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Combos */}
+          <section className="bg-zinc-900/60 p-3 rounded border border-yellow-500/20">
+            <h3 className="font-bold text-sm text-yellow-300 flex items-center gap-1.5 mb-1.5">
+              <Flame className="w-4 h-4 text-yellow-400" /> COMBO STREAK MULTIPLIER
             </h3>
             <p className="text-zinc-300 text-[11px]">
-              Watch out for Riot Shield troops (invulnerable to forward bullets—jump over them or blast with Shotgun/Grenade),
-              Attack Choppers dropping aerial mortar bombs, and the Iron Nokana boss fortress equipped with dual vulcan turrets!
+              Chain enemy eliminations within 3.5 seconds to build your combo multiplier up to 20x for astronomical high scores!
             </p>
           </section>
         </div>

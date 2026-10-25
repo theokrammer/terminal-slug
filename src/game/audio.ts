@@ -122,13 +122,11 @@ class SoundEngine {
   }
 
   public playHMG() {
-    // Punchy rapid fire
     this.playTone(420, 'sawtooth', 0.07, 0.35, 0.02);
     this.playNoise(0.06, 0.35);
   }
 
   public playShotgun() {
-    // Heavy blast
     this.playTone(180, 'triangle', 0.22, 0.5, 0.01);
     this.playNoise(0.35, 0.7, true);
   }
@@ -181,6 +179,51 @@ class SoundEngine {
     }
   }
 
+  public playSniperAim() {
+    this.playTone(1800, 'sine', 0.04, 0.15, 0.01);
+  }
+
+  public playSniperShot() {
+    this.playTone(2200, 'square', 0.12, 0.4, 0.01);
+    this.playNoise(0.15, 0.5);
+  }
+
+  public playMortarLaunch() {
+    this.playTone(110, 'triangle', 0.16, 0.45, 0.01);
+    this.playNoise(0.12, 0.4, true);
+  }
+
+  public playGatlingSpin() {
+    this.playTone(320, 'sawtooth', 0.08, 0.25, 0.05);
+  }
+
+  public playJetFlyby() {
+    if (this.isMuted) return;
+    this.initContext();
+    if (!this.ctx || !this.masterGain) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(120, this.ctx.currentTime + 0.7);
+      gain.gain.setValueAtTime(0.35, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.7);
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.7);
+    } catch {
+      // Ignore
+    }
+    this.playNoise(0.6, 0.4, true);
+  }
+
+  public playParachutePop() {
+    this.playNoise(0.08, 0.25);
+    this.playTone(240, 'triangle', 0.08, 0.2, 0.01);
+  }
+
   public playExplosion(isLarge = false) {
     this.playNoise(isLarge ? 0.65 : 0.35, isLarge ? 0.8 : 0.5, true);
     this.playTone(isLarge ? 80 : 120, 'triangle', isLarge ? 0.45 : 0.25, 0.6, 0.01);
@@ -221,7 +264,6 @@ class SoundEngine {
   }
 
   public playPickup() {
-    // Happy arcade arpeggio
     this.playTone(440, 'triangle', 0.07, 0.25, 0.1);
     setTimeout(() => this.playTone(660, 'triangle', 0.07, 0.25, 0.1), 50);
     setTimeout(() => this.playTone(880, 'triangle', 0.12, 0.3, 0.01), 100);
@@ -234,7 +276,6 @@ class SoundEngine {
   }
 
   public playTankMount() {
-    // Mechanical latch & rev
     this.playTone(110, 'sawtooth', 0.25, 0.4, 0.05);
     setTimeout(() => this.playTone(220, 'sawtooth', 0.2, 0.45, 0.05), 100);
     setTimeout(() => this.playNoise(0.15, 0.3), 150);
@@ -249,7 +290,13 @@ class SoundEngine {
     this.playTone(160, 'square', 0.1, 0.3, 0.01);
   }
 
-  // Voice announcements: uses SpeechSynthesis with high rate & radio pitch
+  public playComboChime(count: number) {
+    const baseFreq = 400 + Math.min(count, 15) * 50;
+    this.playTone(baseFreq, 'triangle', 0.08, 0.25, 0.05);
+    setTimeout(() => this.playTone(baseFreq * 1.25, 'triangle', 0.1, 0.25, 0.01), 60);
+  }
+
+  // Voice announcements
   public speak(phrase: string) {
     if (this.voiceMuted || typeof window === 'undefined' || !window.speechSynthesis) return;
 
@@ -316,6 +363,13 @@ class SoundEngine {
     this.speak("MISSION COMPLETE! EXCELLENT WORK!");
   }
 
+  public announceCombo(streak: number) {
+    if (streak === 5) this.speak("GREAT!");
+    else if (streak === 10) this.speak("EXCELLENT!");
+    else if (streak === 15) this.speak("MASSACRE!");
+    else if (streak === 20) this.speak("UNSTOPPABLE!");
+  }
+
   // Background procedural arcade chiptune beat
   public startBGM() {
     if (this.isBgmPlaying || this.musicMuted) return;
@@ -323,7 +377,6 @@ class SoundEngine {
     this.isBgmPlaying = true;
     this.bgmStep = 0;
 
-    // Driving bass line notes (in Hz)
     const bassline = [
       110, 110, 130.81, 110,
       146.83, 110, 130.81, 164.81,
@@ -331,7 +384,6 @@ class SoundEngine {
       98, 98, 123.47, 130.81
     ];
 
-    // Catchy arcade lead melody notes
     const melody = [
       440, 0, 523.25, 440,
       587.33, 523.25, 440, 392,
@@ -339,7 +391,6 @@ class SoundEngine {
       523.25, 440, 392, 440
     ];
 
-    // Every 130ms (approx 115 BPM 16th notes)
     this.bgmInterval = window.setInterval(() => {
       if (this.musicMuted || !this.ctx || !this.masterGain) return;
 
@@ -347,21 +398,16 @@ class SoundEngine {
       const bassFreq = bassline[step];
       const leadFreq = melody[step];
 
-      // Bass note
       if (bassFreq > 0) {
         this.playTone(bassFreq, 'sawtooth', 0.1, 0.14, 0.01);
       }
 
-      // Snare / Hi-hat on beats
       if (step % 4 === 2) {
-        // Snare
         this.playNoise(0.08, 0.12, false);
       } else if (step % 2 === 0) {
-        // Closed hi-hat
         this.playNoise(0.03, 0.05, false);
       }
 
-      // Lead melody every other step
       if (leadFreq > 0 && Math.random() > 0.2) {
         this.playTone(leadFreq, 'square', 0.09, 0.09, 0.01);
       }

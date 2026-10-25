@@ -218,19 +218,30 @@ export default function App() {
 
             {/* Boss Warning Banner alert */}
             {engineRef.current?.isBossActive && (engineRef.current?.bossAlertTimer || 0) > 0 && (
-              <div className="self-center bg-red-950/80 border-2 border-red-500 px-6 py-2 rounded text-red-400 font-mono text-sm font-bold tracking-widest animate-pulse shadow-lg flex items-center space-x-2">
+              <div className="self-center bg-red-950/85 border-2 border-red-500 px-6 py-2 rounded text-red-400 font-mono text-sm font-bold tracking-widest animate-pulse shadow-lg flex items-center space-x-2">
                 <Skull className="w-5 h-5 text-red-500 animate-bounce" />
-                <span>&gt;&gt;&gt; WARNING: IRON NOKANA BATTLE FORTRESS APPROACHING &lt;&lt;&lt;</span>
+                <span>
+                  {engineRef.current?.activeBossType === 'boss_tetsuyuki'
+                    ? '>>> WARNING: TETSUYUKI FLYING FORTRESS ENGAGED <<<'
+                    : '>>> WARNING: IRON NOKANA BATTLE FORTRESS APPROACHING <<<'}
+                </span>
               </div>
             )}
 
             {/* Bottom Status Ticker */}
             <div className="flex items-center justify-between text-[11px] text-zinc-500 font-mono">
-              <span className="bg-black/40 px-2 py-0.5 rounded">
-                STAGE DISTANCE: {engineRef.current?.stageDistance || 0}m
-              </span>
+              <div className="flex items-center space-x-2">
+                <span className="bg-black/60 px-2 py-0.5 rounded text-zinc-400">
+                  SECTOR: <strong className="text-emerald-400">{engineRef.current?.currentBiome.toUpperCase()}</strong> ({engineRef.current?.stageDistance || 0}m)
+                </span>
+                {playerData.combo > 1 && (
+                  <span className="bg-amber-950/70 border border-amber-500/50 px-2 py-0.5 rounded text-amber-400 font-bold animate-pulse">
+                    STREAK: {playerData.combo}x COMBO
+                  </span>
+                )}
+              </div>
               <span className="bg-black/40 px-2 py-0.5 rounded hidden sm:inline">
-                [WASD: MOVE · SPACE: JUMP · J: SHOOT/MELEE · L: GRENADE · E: SLUG]
+                [WASD: MOVE · SPACE: JUMP · S+SPACE: DROP DOWN · J: FIRE/MELEE · L: GRENADE · E: SLUG]
               </span>
             </div>
           </div>

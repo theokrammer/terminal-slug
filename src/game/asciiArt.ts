@@ -1,6 +1,6 @@
 /**
  * Terminal Slug - ASCII Art Assets & Frame Sprites
- * Handcrafted monospaced art for characters, vehicles, enemies, and FX
+ * Handcrafted monospaced art for characters, vehicles, enemies, bosses, biomes, and FX
  */
 
 export const ASCII_TITLE = [
@@ -9,7 +9,7 @@ export const ASCII_TITLE = [
   "   | | |  _| |_) | |\\/| || ||  \\| | / _ \\ | |     \\___ \\| |  | | | | |  _ ",
   "   | | | |___| _ <| |  | || || |\\  |/ ___ \\| |___   ___) | |__| |_| | |_| |",
   "   |_| |___|_| \\_\\_|  |_|___|_| \\_/_/   \\_\\_____| |____/|_____\\___/ \\____|",
-  "        >>> MISSION 1: OPERATION DESERT STRIKE <<< [VER 1.0.4]          "
+  "        >>> OPERATION DESERT STRIKE · THE EXPANDED WAR THEATER <<<          "
 ];
 
 export const ASCII_SLUG_LOGO = [
@@ -138,8 +138,9 @@ export const SLUG_FRAMES = {
   ]
 };
 
-// Enemies
+// Enemy Roster Frames
 export const ENEMY_FRAMES = {
+  // 1. Grunts
   gruntRight: [
     "  {•_•}  ",
     " --|#|-> ",
@@ -150,6 +151,8 @@ export const ENEMY_FRAMES = {
     " <-|#|-- ",
     "   / \\   "
   ],
+
+  // 2. Slasher
   slasherChargeRight: [
     "  {>_<}  ",
     " --|#|)=>",
@@ -160,6 +163,25 @@ export const ENEMY_FRAMES = {
     " <=(|#|--",
     "    \\\\   "
   ],
+
+  // 3. Arabian Swordsman (Acrobatic leap and dual scimitars)
+  swordsmanRight: [
+    "  {ò_ó}  ",
+    " //|#|\\\\ ",
+    "   / \\   "
+  ],
+  swordsmanLeft: [
+    "  {ò_ó}  ",
+    " //|#|\\\\ ",
+    "   / \\   "
+  ],
+  swordsmanLeap: [
+    "  {ò_ó}  ",
+    " --|#|--)",
+    "   < >   "
+  ],
+
+  // 4. Rifleman
   riflemanAimRight: [
     "  {•_•}  ",
     " --|#|===",
@@ -170,6 +192,20 @@ export const ENEMY_FRAMES = {
     "===|#|-- ",
     "    /_   "
   ],
+
+  // 5. Sniper (Long barrel and laser scope)
+  sniperRight: [
+    "  [•-•]  ",
+    " --|#|========*",
+    "   _\\    "
+  ],
+  sniperLeft: [
+    "  [•-•]  ",
+    "*========|#|-- ",
+    "    /_   "
+  ],
+
+  // 6. Bazooka
   bazookaAimRight: [
     "  {•_•}[]",
     " --|#|===",
@@ -180,6 +216,20 @@ export const ENEMY_FRAMES = {
     "===|#|-- ",
     "   / \\   "
   ],
+
+  // 7. Mortar Trooper (Kneeling with mortar tube)
+  mortarRight: [
+    "   {•_•} / ",
+    "  --|#|-[|]",
+    "    _\\  /  "
+  ],
+  mortarLeft: [
+    " \\ {•_•}   ",
+    "[|]-|#|--  ",
+    "  \\  /_    "
+  ],
+
+  // 8. Shield Trooper
   shieldRight: [
     "  {•_•}|#|",
     " --|#| |#|",
@@ -190,6 +240,67 @@ export const ENEMY_FRAMES = {
     "|#| |#|-- ",
     "|#| / \\   "
   ],
+
+  // 9. Gatling Juggernaut (Heavy Armor Commando)
+  gatlingRight: [
+    "  [X_X]   ",
+    " =#{###}::==#",
+    "   /   \\  "
+  ],
+  gatlingLeft: [
+    "   [X_X]  ",
+    "#==::{###}#=",
+    "   /   \\  "
+  ],
+
+  // 10. Paratrooper with Parachute
+  paratrooperChute: [
+    "  /-------\\  ",
+    " (  REBEL  ) ",
+    "  \\ \\ | / /  ",
+    "    {•_•}    ",
+    "   --|#|--   ",
+    "     / \\     "
+  ],
+  paratrooperLanded: [
+    "   {•_•}   ",
+    "  --|#|==> ",
+    "    / \\    "
+  ],
+
+  // 11. Rolling Drone Mine (Kamikaze)
+  droneMine1: [
+    " (o)X(o) ",
+    "  /===\\  "
+  ],
+  droneMine2: [
+    " (•)!(•) ",
+    "  \\===/  "
+  ],
+
+  // 12. Automated Platform Security Turret
+  turretRight: [
+    "  [•]===#  ",
+    " /=======\\ "
+  ],
+  turretLeft: [
+    "  #===[•]  ",
+    " /=======\\ "
+  ],
+  turretUp: [
+    "   / ^ \\   ",
+    "  [ |#| ]  ",
+    " /=======\\ "
+  ],
+
+  // 13. Rebel Dive-Bomber Jet
+  airJet: [
+    " <=======\\=====/=======> ",
+    "   [==|REBEL AIR|==]     ",
+    "       \\===V===/         "
+  ],
+
+  // 14. Attack Chopper
   chopper: [
     "   ====+====   ",
     "  /  [o_o]  \\  ",
@@ -197,6 +308,8 @@ export const ENEMY_FRAMES = {
     "     /   \\     ",
     "    =     =    "
   ],
+
+  // 15. Armored Buggy
   buggyRight: [
     "    [•_•]==#   ",
     "   /________\\  ",
@@ -209,7 +322,7 @@ export const ENEMY_FRAMES = {
   ]
 };
 
-// Boss: "IRON NOKANA" Heavy Siege Fortress Tank
+// Boss 1: "IRON NOKANA" Heavy Siege Fortress Tank
 export const BOSS_NOKANA = [
   "   [!]==============[ IRON NOKANA ]==============[!]   ",
   "      /   [•_•]   \\       /===#  #===\\                 ",
@@ -219,6 +332,18 @@ export const BOSS_NOKANA = [
   " |  [#] [#] [#] [#] [#] [#] [#] [#] [#] [#] [#] [#]   |",
   " |====================================================|",
   " (OOO)==========================================(OOO)  "
+];
+
+// Boss 2: "TETSUYUKI" Heavy Flying Fortress Gunship
+export const BOSS_TETSUYUKI = [
+  "       <==============[ TETSUYUKI FLYING FORTRESS ]==============>       ",
+  "    /====\\       /---------------------------------\\       /====\\    ",
+  "   [TURBINE]====[======[O]====[O]====[O]=====[O]======]====[TURBINE]  ",
+  "    \\====/       \\_______/                 \\_______/       \\====/    ",
+  "       ||         | [FLAK-L]   [BOMB-BAY]   [FLAK-R] |         ||        ",
+  "   <===++=========[==================================]=========++===>   ",
+  "                   \\  (o)   (o)   (o)   (o)   (o)   /                    ",
+  "                    \\______________________________/                     "
 ];
 
 // POW (Prisoner of War)
@@ -259,7 +384,29 @@ export const OBSTACLES = {
     " |\\   /| ",
     " |/   \\| ",
     " +=====+ "
+  ],
+  watchtower: [
+    " [| SNIPER NEST |] ",
+    " +===============+ ",
+    "   |   |   |   |   ",
+    "   |   |   |   |   ",
+    " [| CATWALK LV1 |] ",
+    " +===============+ ",
+    "   |   |   |   |   ",
+    "   |   |   |   |   "
+  ],
+  generator: [
+    " +---[PWR]---+ ",
+    " | [⚡]  [⚡] | ",
+    " +-----------+ "
   ]
+};
+
+// Hazards
+export const HAZARD_ART = {
+  spikes: "^^^^^^^^^^^^",
+  acid: "~~~~[ACID]~~~~",
+  landmine: "[!MINE!]"
 };
 
 // Pickups

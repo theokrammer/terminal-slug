@@ -8,6 +8,8 @@ export type WeaponType = 'PISTOL' | 'HMG' | 'SHOTGUN' | 'ROCKET' | 'FLAME' | 'LA
 
 export type PhosphorTheme = 'green' | 'amber' | 'cyan' | 'white' | 'red';
 
+export type BiomeType = 'desert' | 'city' | 'cyber';
+
 export interface ThemeColors {
   name: string;
   primary: string;
@@ -22,12 +24,42 @@ export interface ThemeColors {
 export type EnemyType =
   | 'grunt'
   | 'slasher'
+  | 'swordsman'
   | 'rifleman'
+  | 'sniper'
   | 'bazooka'
+  | 'mortar_trooper'
   | 'shield'
+  | 'gatling_juggernaut'
+  | 'paratrooper'
+  | 'drone_mine'
+  | 'turret'
+  | 'air_jet'
   | 'chopper'
   | 'buggy'
-  | 'boss_nokana';
+  | 'boss_nokana'
+  | 'boss_tetsuyuki';
+
+export interface Platform {
+  id: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  type: 'steel' | 'scaffold' | 'bunker_roof' | 'catwalk' | 'bridge';
+  isOneWay: boolean; // can jump through from below
+}
+
+export interface Hazard {
+  id: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  type: 'spikes' | 'acid' | 'landmine';
+  damage: number;
+  triggered?: boolean;
+}
 
 export interface Player {
   x: number;
@@ -41,6 +73,7 @@ export interface Player {
   maxHealth: number;
   lives: number;
   isGrounded: boolean;
+  currentPlatform: Platform | null;
   isCrouching: boolean;
   isAimingUp: boolean;
   isMelee: boolean;
@@ -57,8 +90,12 @@ export interface Player {
   tankId: number | null;
   coyoteTimer: number;
   jumpBufferTimer: number;
+  dropThroughTimer: number; // For dropping through one-way platforms (S + Jump)
   shotsFired: number;
   shotsHit: number;
+  combo: number;
+  comboTimer: number;
+  maxCombo: number;
 }
 
 export interface SlugTank {
@@ -77,7 +114,7 @@ export interface SlugTank {
   cannonCooldown: number;
   vulcanCooldown: number;
   isGrounded: boolean;
-  turretAngle: number; // degrees or aim direction (-45, 0, 45, etc.)
+  turretAngle: number;
   destroyed: boolean;
 }
 
@@ -93,15 +130,22 @@ export interface Enemy {
   health: number;
   maxHealth: number;
   facing: 1 | -1;
-  state: 'patrol' | 'alert' | 'aim' | 'attack' | 'retreat' | 'stun';
+  state: 'patrol' | 'alert' | 'aim' | 'attack' | 'retreat' | 'stun' | 'landing' | 'spinup';
   stateTimer: number;
   shootCooldown: number;
   isGrounded: boolean;
+  currentPlatform?: Platform | null;
   scoreValue: number;
   name: string;
-  // Specific boss or chopper states
+  // Specific states for advanced enemies
   flightY?: number;
   bossPhase?: number;
+  aimLaserX?: number;
+  aimLaserY?: number;
+  laserCharging?: boolean;
+  hasParachute?: boolean;
+  gatlingSpin?: number;
+  bombCount?: number;
 }
 
 export interface POW {
@@ -122,7 +166,19 @@ export interface Bullet {
   vy: number;
   damage: number;
   isPlayer: boolean;
-  type: 'pistol' | 'hmg' | 'shotgun' | 'rocket' | 'flame' | 'laser' | 'cannon' | 'enemy_bullet' | 'enemy_rocket' | 'bomb';
+  type:
+    | 'pistol'
+    | 'hmg'
+    | 'shotgun'
+    | 'rocket'
+    | 'flame'
+    | 'laser'
+    | 'cannon'
+    | 'enemy_bullet'
+    | 'enemy_rocket'
+    | 'enemy_sniper'
+    | 'bomb'
+    | 'mortar';
   char: string;
   color?: string;
   life: number;
@@ -141,6 +197,7 @@ export interface Grenade {
   bounces: number;
   timer: number;
   isPlayer: boolean;
+  isCluster?: boolean;
 }
 
 export interface PickupItem {
@@ -186,7 +243,7 @@ export interface Destructible {
   y: number;
   width: number;
   height: number;
-  type: 'sandbag' | 'barrel' | 'crate';
+  type: 'sandbag' | 'barrel' | 'crate' | 'watchtower' | 'generator';
   health: number;
   maxHealth: number;
 }
