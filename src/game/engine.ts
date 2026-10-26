@@ -1395,12 +1395,15 @@ export class GameEngine {
 
   // Sniper with Laser Sight Telegraph
   private updateSniper(e: Enemy, distToPlayer: number, absDist: number) {
-    if (absDist < 450) {
-      e.aimLaserX = this.player.x + this.player.width / 2;
-      e.aimLaserY = this.player.y + 12;
+    if (absDist < 480) {
+      // Track player until final lock-on warning phase (last 14 frames)
+      if (e.shootCooldown > 14 || e.aimLaserX === undefined || e.aimLaserY === undefined) {
+        e.aimLaserX = this.player.x + this.player.width / 2;
+        e.aimLaserY = this.player.isCrouching ? this.player.y + 18 : this.player.y + 12;
+      }
 
       // Charge up telegraph
-      if (e.shootCooldown <= 40 && e.shootCooldown > 0) {
+      if (e.shootCooldown <= 45 && e.shootCooldown > 0) {
         e.laserCharging = true;
         if (e.shootCooldown % 10 === 0) {
           sound.playSniperAim();
@@ -1411,24 +1414,58 @@ export class GameEngine {
         e.shootCooldown = 110;
         e.laserCharging = false;
         sound.playSniperShot();
-        this.screenShake = 3;
+        this.screenShake = 4;
 
-        // High velocity piercing sniper round
+        const startX = e.facing === 1 ? e.x + e.width : e.x;
+        const startY = e.y + 12;
+        const targetX = e.aimLaserX ?? (this.player.x + this.player.width / 2);
+        const targetY = e.aimLaserY ?? (this.player.y + 12);
+
+        const dx = targetX - startX;
+        const dy = targetY - startY;
+        const dist = Math.hypot(dx, dy) || 1;
+        const speed = 18;
+        const vx = (dx / dist) * speed;
+        const vy = (dy / dist) * speed;
+
+        // Choose appropriate ASCII glyph for bullet trajectory angle
+        let char = '─';
+        if (Math.abs(vy) > Math.abs(vx) * 1.4) {
+          char = '|';
+        } else if (vx * vy > 0) {
+          char = '\\';
+        } else if (vx * vy < 0) {
+          char = '/';
+        }
+
+        // High velocity piercing sniper round fired directly along laser vector
         this.bullets.push({
           id: this.bulletIdCounter++,
-          x: e.facing === 1 ? e.x + e.width : e.x,
-          y: e.y + 12,
-          vx: e.facing * 16,
-          vy: 0,
+          x: startX,
+          y: startY,
+          vx,
+          vy,
           damage: 2,
           isPlayer: false,
           type: 'enemy_sniper',
-          char: '─',
+          char,
           color: '#ef4444',
-          life: 45,
-          maxLife: 45,
-          width: 16,
-          height: 4,
+          life: 50,
+          maxLife: 50,
+          width: 14,
+          height: 14,
+        });
+
+        // Barrel flash particles
+        this.particles.push({
+          x: startX,
+          y: startY,
+          vx: vx * 0.08,
+          vy: vy * 0.08,
+          char: '*',
+          color: '#fca5a5',
+          life: 8,
+          maxLife: 8,
         });
       }
     } else {
@@ -1952,35 +1989,36 @@ export class GameEngine {
           continue;
         }
       } else {
-        // Enemy bullets hitting Player or Slug Tank
+        // Enemy bullets hitting Player or Slug Tank with swept multi-sample collision
         if (this.player.inTank && this.player.tankId !== null) {
           const tank = this.tanks.find((t) => t.id === this.player.tankId);
-          if (
-            tank &&
-            b.x >= tank.x &&
-            b.x <= tank.x + tank.width &&
-            b.y >= tank.y &&
-            b.y <= tank.y + tank.height
-          ) {
-            tank.health -= b.damage * 3.5;
-            sound.playHit();
-            this.createHitSparks(b.x, b.y);
-            if (tank.health <= 0) {
-              this.destroyTank(tank);
+          if (tank) {
+            const hit =
+              (b.x >= tank.x && b.x <= tank.x + tank.width && b.y >= tank.y && b.y <= tank.y + tank.height) ||
+              (b.x - b.vx >= tank.x && b.x - b.vx <= tank.x + tank.width && b.y - b.vy >= tank.y && b.y - b.vy <= tank.y + tank.height) ||
+              (b.x - b.vx * 0.5 >= tank.x && b.x - b.vx * 0.5 <= tank.x + tank.width && b.y - b.vy * 0.5 >= tank.y && b.y - b.vy * 0.5 <= tank.y + tank.height);
+            if (hit) {
+              tank.health -= b.damage * 3.5;
+              sound.playHit();
+              this.createHitSparks(b.x, b.y);
+              if (tank.health <= 0) {
+                this.destroyTank(tank);
+              }
+              this.bullets.splice(i, 1);
+              continue;
             }
+          }
+        } else if (this.player.invincibleTimer <= 0) {
+          const p = this.player;
+          const hit =
+            (b.x >= p.x && b.x <= p.x + p.width && b.y >= p.y && b.y <= p.y + p.height) ||
+            (b.x - b.vx >= p.x && b.x - b.vx <= p.x + p.width && b.y - b.vy >= p.y && b.y - b.vy <= p.y + p.height) ||
+            (b.x - b.vx * 0.5 >= p.x && b.x - b.vx * 0.5 <= p.x + p.width && b.y - b.vy * 0.5 >= p.y && b.y - b.vy * 0.5 <= p.y + p.height);
+          if (hit) {
+            this.damagePlayer(b.damage);
             this.bullets.splice(i, 1);
             continue;
           }
-        } else if (
-          this.player.invincibleTimer <= 0 &&
-          b.x >= this.player.x &&
-          b.x <= this.player.x + this.player.width &&
-          b.y >= this.player.y &&
-          b.y <= this.player.y + this.player.height
-        ) {
-          this.damagePlayer(b.damage);
-          this.bullets.splice(i, 1);
-          continue;
         }
       }
     }
@@ -2849,12 +2887,36 @@ export class GameEngine {
 
         // Laser Aim Sight Line for Snipers
         if (e.type === 'sniper' && e.laserCharging && e.aimLaserX !== undefined && e.aimLaserY !== undefined) {
-          ctx.strokeStyle = '#ef4444';
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(screenX + (e.facing === 1 ? e.width : 0), e.y + 12);
-          ctx.lineTo(e.aimLaserX - this.cameraX, e.aimLaserY);
-          ctx.stroke();
+          const targetScreenX = e.aimLaserX - this.cameraX;
+          const muzzleX = screenX + (e.facing === 1 ? e.width : 0);
+          const muzzleY = e.y + 12;
+
+          ctx.save();
+          if (e.shootCooldown <= 14) {
+            // Locked on! Solid glowing beam with pulsing reticle
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(muzzleX, muzzleY);
+            ctx.lineTo(targetScreenX, e.aimLaserY);
+            ctx.stroke();
+
+            // Draw target lock reticle at aiming point
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(targetScreenX - 3, e.aimLaserY - 3, 6, 6);
+            ctx.fillText('[+]', targetScreenX - 8, e.aimLaserY - 8);
+          } else {
+            // Tracking phase: dotted laser line
+            ctx.strokeStyle = 'rgba(239, 68, 68, 0.65)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(muzzleX, muzzleY);
+            ctx.lineTo(targetScreenX, e.aimLaserY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+          ctx.restore();
         }
 
         if (e.type === 'boss_nokana') {
@@ -2983,6 +3045,19 @@ export class GameEngine {
     for (const b of this.bullets) {
       const screenX = b.x - this.cameraX;
       ctx.fillStyle = b.color || (b.isPlayer ? theme.primary : '#f87171');
+
+      if (b.type === 'enemy_sniper') {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.85)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(screenX, b.y);
+        ctx.lineTo(screenX - b.vx * 1.5, b.y - b.vy * 1.5);
+        ctx.stroke();
+        ctx.restore();
+        ctx.fillStyle = '#fca5a5';
+      }
+
       ctx.fillText(b.char, screenX, b.y);
     }
 
